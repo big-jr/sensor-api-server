@@ -1,7 +1,7 @@
 from enum import Enum, IntEnum
 from typing import List
 
-from sensors.i2cdriver import I2cDriver
+from src.sensors.i2cdriver import I2cDriver
 
 # Copyright 2025 Jason Ross
 

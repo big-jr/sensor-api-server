@@ -2,7 +2,7 @@ import time
 
 from fastapi import FastAPI
 
-from sensors.amg8833 import Amg8833
+from src.sensors.amg8833 import Amg8833
 
 app = FastAPI()
 
