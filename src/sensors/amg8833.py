@@ -1,7 +1,7 @@
 from enum import Enum, IntEnum
 from typing import List
 
-from .i2cdriver import I2cDriver
+from sensors.i2cdriver import I2cDriver
 
 # Copyright 2025 Jason Ross
 
@@ -122,6 +122,14 @@ class Amg8833:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(device={self._device})"
+
+    def close(self) -> None:
+        """
+        Close all connections associated with the sensor
+        :return:
+        """
+
+        self._device.close()
 
     def set_sensor_mode(self, mode: PowerControlMode) -> None:
         """
