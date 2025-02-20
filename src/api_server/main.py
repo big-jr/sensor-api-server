@@ -40,14 +40,8 @@ async def temperatures():
     :return: All the data from the sensor
     """
 
-    try:
-
-        return {
-            "ambient_temperature": sensor.read_thermistor(),
-            "temperature": sensor.read_temp(64),
-            "time": time.time(),
-        }
-
-    finally:
-        if sensor:
-            sensor.close()
+    return {
+        "ambient_temperature": sensor.read_thermistor(),
+        "temperature": sensor.read_temp(64),
+        "time": time.time(),
+    }
