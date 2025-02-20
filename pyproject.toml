@@ -1,0 +1,27 @@
+[project]
+name = "sensor-api-server"
+version = "0.1.0"
+description = "A simple server providing an API containing sensor details"
+authors = [
+    {name = "big-jr",email = "githubcomms@softwarepragmatism.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "smbus2 (>=0.5.0,<0.6.0)",
+    "fastapi (>=0.115.8,<0.116.0)"
+]
+
+[tool.poetry]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+black = "^25.1.0"
+pylint = "^3.3.4"
+ruff = "^0.9.6"
+isort = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
