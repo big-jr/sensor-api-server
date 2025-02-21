@@ -30,18 +30,21 @@ app = FastAPI(lifespan=server_lifespan)
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "AMG8833 API. See /docs for API details."}
 
 
-@app.get("/sensor/1/data")
+@app.get("/sensor/0/data")
 async def temperatures():
     """
 
     :return: All the data from the sensor
     """
 
+    error, temperatures = sensor.read_temp(64)
+
     return {
+        "error": error,
         "ambient_temperature": sensor.read_thermistor(),
-        "temperature": sensor.read_temp(64),
+        "temperature": temperatures,
         "time": time.time(),
     }

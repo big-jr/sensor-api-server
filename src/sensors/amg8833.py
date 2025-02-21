@@ -174,7 +174,15 @@ class Amg8833:
         self._device.write8(AmgRegister.REG_SCLR, 0b00000110)
 
     def read_temp(self, pixel_number: int) -> tuple[bool, List[int | float]]:
-        temperatures = []  # temp array
+        """
+        Retrieve the temperatures from the pixels on the sensor
+
+        :return: Tuple containing:
+                  ( Error: True for error, False for success,
+                    List of pixel temperature values in C )
+        """
+
+        temperatures = []
         status = False  # status boolean for errors
         for i in range(0, pixel_number):
             raw = self._device.read16(AmgRegister.REG_PIXEL_BASE + (i << 1))
