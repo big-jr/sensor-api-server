@@ -45,6 +45,6 @@ async def temperatures():
     return {
         "error": error,
         "ambient_temperature": sensor.read_thermistor(),
-        "temperature": temperatures,
+        "temperatures": temperatures,
         "time": time.time(),
     }
