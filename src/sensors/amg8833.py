@@ -131,6 +131,15 @@ class Amg8833:
 
         self._device.close()
 
+    def __enter__(self):
+        """
+        Open the context manager
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
     def set_sensor_mode(self, mode: PowerControlMode) -> None:
         """
         Set the power mode for the sensor

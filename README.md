@@ -10,6 +10,10 @@ Although there is other Python code available that communicates with this device
 
 In addition, the Amg8833 class allows the connection to the device to be closed, which many others do not. This stops the bus connection from being left open when the sensor is not required.
 
+## Notes
+
+The `sensors.Amd8833` class may be used as a context manager, so you don't need to explicitly call the `close()` function to release the connection.
+
 ## Running The Server
 
 The server uses FastAPI, and to run it so that allows connections from any IP on the network, use `uvicorn` as follows:
@@ -18,4 +22,10 @@ The server uses FastAPI, and to run it so that allows connections from any IP on
 uvicorn src.api_server.main:app --host 0.0.0.0
 ```
 
-N.B. The path to the `app` variable is the fully-qualified path including all of the modules relative to the current directory.
+N.B. The path to the `app` variable is the fully-qualified path including all the modules relative to the current directory.
+
+## Summary
+
+This code is written and maintained by Jason Ross, and released under the MIT licence.
+
+Visit my website at [https://www.softwarepragmatism.com](https://www.softwarepragmatism.com) for more projects and articles.
