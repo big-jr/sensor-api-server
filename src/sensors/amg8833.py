@@ -226,7 +226,7 @@ class Amg8833:
         return signed_conversion(raw) * 0.0625
 
     @property
-    def last_read_time(self):
+    def last_read_time(self)->float:
         """
 
         :returns: The time when the data was last retrieved from the sensor
@@ -261,7 +261,7 @@ class CachedAmg8833(Amg8833):
         If there's no data in the object, or if the cache was updated earlier than
         the required cache time, renew the cached data
         """
-        if time.time() - self.last_read_time > 0.01 or not self.cached_temp_data:
+        if time.time() - self.last_read_time > self.frame_time or not self.cached_temp_data:
             self.cached_temp_data = super().read_temp(
                 AMG8833_PIXEL_COUNT
             )  # Get all the data
