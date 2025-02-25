@@ -1,4 +1,6 @@
+import time
 from enum import Enum, IntEnum
+from sys import float_info
 from typing import List
 
 from src.sensors.i2cdriver import I2cDriver
@@ -8,6 +10,7 @@ from src.sensors.i2cdriver import I2cDriver
 # Hardware settings
 
 DEFAULT_AMG8833_ADDRESS = 0x69
+AMG8833_PIXEL_COUNT = 64
 RASPBERRY_PI_I2C_BUS = 0x01
 
 # AMGxxxx Registers
@@ -120,6 +123,9 @@ class Amg8833:
         self.set_interrupt_mode(InterruptSettings.DISABLED)
         self.set_sample_rate(FrameRate.FPS_10)
 
+        # Time the sensor was last read - handy for timing and derived classes
+        self._last_read_time = 0
+
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(device={self._device})"
 
@@ -182,10 +188,13 @@ class Amg8833:
         """
         self._device.write8(AmgRegister.REG_SCLR, 0b00000110)
 
-    def read_temp(self, pixel_number: int) -> tuple[bool, List[int | float]]:
+    def read_temp(
+        self, pixel_number: int = AMG8833_PIXEL_COUNT
+    ) -> tuple[bool, List[int | float]]:
         """
         Retrieve the temperatures from the pixels on the sensor
 
+        :param pixel_number: The number of pixels to read, starting from pixel 0. Defaults to the maximum of 64, so the whole sensor is read.
         :return: Tuple containing:
                   ( Error: True for error, False for success,
                     List of pixel temperature values in C )
@@ -199,6 +208,9 @@ class Amg8833:
             if converted < -20 or converted > 100:
                 return True, temperatures  # return error if outside temp window
             temperatures.append(converted)
+
+        self._last_read_time = time.time()
+
         return status, temperatures
 
     def read_thermistor(self) -> float:
@@ -208,5 +220,74 @@ class Amg8833:
         """
         raw = self._device.read16(AmgRegister.REG_TTHL)
 
+        self._last_read_time = time.time()
+
         # Raw value requires scaling
         return signed_conversion(raw) * 0.0625
+
+    @property
+    def last_read_time(self):
+        """
+
+        :returns: The time when the data was last retrieved from the sensor
+        """
+        return self._last_read_time
+
+
+class CachedAmg8833(Amg8833):
+    """
+    A derived Amg8833-handling class with built-in caching.
+    Why a derived class? The sensor knows its own limits,
+    including the maximum caching rate. Building it into the class
+    avoids the need for callers to worry about any specifics,
+    they simply drop the new class into their code.
+    """
+
+    def __init__(
+        self,
+        address: int = DEFAULT_AMG8833_ADDRESS,
+        bus_number: int = RASPBERRY_PI_I2C_BUS,
+    ):
+        super().__init__(address, bus_number)
+
+        # Cached data - start with values that will get overwritten
+        self.cached_temp_data: tuple[bool, List[int | float]] = (True, [])
+        self.cached_thermistor_value = float_info.min
+
+        self.frame_time = 1.0  # Default 1fps
+
+    def update_cache_if_necessary(self):
+        """
+        If there's no data in the object, or if the cache was updated earlier than
+        the required cache time, renew the cached data
+        """
+        if time.time() - self.last_read_time > 0.01 or not self.cached_temp_data:
+            self.cached_temp_data = super().read_temp(
+                AMG8833_PIXEL_COUNT
+            )  # Get all the data
+            self.cached_thermistor_value = super().read_thermistor()
+            self._last_read_time = time.time()
+
+    def set_sample_rate(self, value: FrameRate) -> None:
+
+        super().set_sample_rate(value)
+
+        # Keep track of the timing
+        if value == FrameRate.FPS_10:
+            self.frame_time = 0.1
+        else:
+            self.frame_time = 1.0
+
+    def read_temp(
+        self, pixel_number: int = AMG8833_PIXEL_COUNT
+    ) -> tuple[bool, List[int | float]]:
+
+        self.update_cache_if_necessary()
+
+        return self.cached_temp_data
+
+    def read_thermistor(self) -> float:
+
+        self.update_cache_if_necessary()
+
+        return self.cached_thermistor_value
