@@ -12,7 +12,7 @@ In addition, the Amg8833 class allows the connection to the device to be closed,
 
 ## Notes
 
-The `sensors.Amd8833` class may be used as a context manager, so you don't need to explicitly call the `close()` function to release the connection.
+The `sensors.Amg8833` class may be used as a context manager, so you don't need to explicitly call the `close()` function to release the connection.
 
 ## Running The Server
 

@@ -5,7 +5,8 @@ from typing import Any, Dict
 
 from fastapi import FastAPI
 
-from src.sensors.amg8833 import Amg8833, CachedAmg8833
+from src.sensors.amg8833 import Amg8833
+from src.sensors.cached_amg8833 import CachedAmg8833
 
 sensor: Amg8833 | None = None
 
