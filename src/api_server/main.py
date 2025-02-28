@@ -35,7 +35,7 @@ async def root():
 
 
 @app.get("/sensor/0/data")
-async def temperatures(request:Request):
+async def temperatures(request: Request):
     """
 
     :return: All the data from the sensor

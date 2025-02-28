@@ -12,10 +12,12 @@ DEFAULT_AMG8833_ADDRESS = 0x69
 AMG8833_PIXEL_COUNT = 64
 RASPBERRY_PI_I2C_BUS = 0x01
 
-# AMGxxxx Registers
-
 
 class AmgRegister(IntEnum):
+    """
+    AMGxxxx Registers
+    """
+
     __str__ = Enum.__str__  # Print name despite this being an int
 
     REG_PCLT = 0x00  # Set Power Control (Normal = , Sleep = )
@@ -51,6 +53,8 @@ class PowerControlMode(IntEnum):
     Power modes
     """
 
+    __str__ = Enum.__str__  # Print name despite this being an int
+
     MODE_NORMAL = 0x00
     MODE_SLEEP = 0x10
 
@@ -59,6 +63,8 @@ class ResetMode(IntEnum):
     """
     Types of reset
     """
+
+    __str__ = Enum.__str__  # Print name despite this being an int
 
     FLAG_RESET = 0x30
     INITIAL_RESET = 0x3F
@@ -69,11 +75,15 @@ class FrameRate(IntEnum):
     Sensor reading rate
     """
 
+    __str__ = Enum.__str__  # Print name despite this being an int
+
     FPS_1 = 0x01
     FPS_10 = 0x00
 
 
 class InterruptSettings(IntEnum):
+    __str__ = Enum.__str__  # Print name despite this being an int
+
     ABSOLUTE_VALUE = 0b00000001
     DIFFERENCE = 0b00000011
     DISABLED = 0b00000000

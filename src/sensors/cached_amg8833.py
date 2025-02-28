@@ -25,13 +25,16 @@ class CachedAmg8833(Amg8833):
         address: int = DEFAULT_AMG8833_ADDRESS,
         bus_number: int = RASPBERRY_PI_I2C_BUS,
     ):
-        super().__init__(address, bus_number)
 
         # Cached data - start with values that will get overwritten
         self.cached_temp_data: tuple[bool, List[int | float]] = (True, [])
         self.cached_thermistor_value = float_info.min
 
         self.frame_time = 1.0  # Default 1fps
+
+        # Call super() after other setup, because base __init__ calls derived set_sample_rate()
+        # Tidy this later
+        super().__init__(address, bus_number)
 
     def update_cache_if_necessary(self):
         """
