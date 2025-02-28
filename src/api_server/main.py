@@ -16,6 +16,8 @@ async def server_lifespan(app: FastAPI):
 
     # Not a fan of global - tidy this later
     global sensor
+
+    # Use CachedAmg8833 for better performance and less network traffic
     sensor = Amg8833(0x69, 1)
 
     # Sleep to allow the sensor to settle
