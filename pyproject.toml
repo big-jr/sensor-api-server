@@ -10,8 +10,8 @@ readme = "README.md"
 requires-python = ">=3.13,<4.0"
 dependencies = [
     "smbus2 (>=0.5.0,<0.6.0)",
-    "fastapi[standard] (>=0.120.0)",
-    "uvicorn[standard] (>=0.38.0, <0.40.0)"   # Cover fastapi-introduced vuln in h11
+    "fastapi[standard] (>=0.128.0)",
+    "uvicorn[standard] (>=0.40.0)"   # Cover fastapi-introduced vuln in h11
 ]
 
 [tool.poetry]
